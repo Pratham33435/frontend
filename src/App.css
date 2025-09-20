@@ -1,0 +1,71 @@
+
+@import "tailwindcss";
+
+
+@keyframes popUp {
+  0% {
+    transform: translateY(0);
+    
+  }
+  20% {
+    transform: translateY(-20px);
+    background: var(--icon-color);
+  }
+  40% {
+    transform: translateY(0);
+    
+  }
+  100% {
+    transform: translateY(0);
+   background: none;
+  }
+}
+
+@keyframes fadeText {
+  0%, 40%, 100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+.animate-pop {
+  animation: popUp 8s infinite;
+}
+
+.animate-text {
+  animation: fadeText 8s infinite;
+}
+
+.delay-0 { animation-delay: 0s; }
+.delay-1 { animation-delay: 2s; }
+.delay-2 { animation-delay: 4s; }
+.delay-3 { animation-delay: 6s; }
+
+.color-1 { --icon-color: #ec4899; } /* Pink */
+.color-2 { --icon-color: #3b82f6; } /* Blue */
+.color-3 { --icon-color: #22c55e; } /* Green */
+.color-4 { --icon-color: #f97316; } /* Orange */
+
+
+@keyframes verticalInfinite {
+  0%   { transform: translateY(0); }
+  15%  { transform: translateY(0); }        /* pause on Skill */
+  25%  { transform: translateY(-2em); }
+  40%  { transform: translateY(-2em); }     /* pause on Talent */
+  50%  { transform: translateY(-4em); }
+  65%  { transform: translateY(-4em); }     /* pause on Passion */
+  75%  { transform: translateY(-6em); }
+  90%  { transform: translateY(-6em); }     /* pause again */
+  100% { transform: translateY(-6em); }     /* seamlessly goes into next cycle */
+}
+
+.loop-text {
+  display: flex;
+  flex-direction: column;
+  animation: verticalInfinite 12s linear infinite;
+}
+
