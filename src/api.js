@@ -1,4 +1,4 @@
-import axios from "axios";
+
 
 export const API_URL = "https://my-strapi-backend-5w3x.onrender.com";
 
