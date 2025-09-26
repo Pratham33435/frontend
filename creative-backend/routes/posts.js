@@ -1,12 +1,13 @@
+// routes/posts.js
 const express = require("express");
-const Post = require("../models/content");
 const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+const Post = require("../models/content");
 
 const router = express.Router();
 
-// =================== Cloudinary Config ===================
+// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -14,35 +15,24 @@ cloudinary.config({
 });
 
 // Cloudinary storage
-const cloudStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+const storage = new CloudinaryStorage({
+  cloudinary,
   params: {
-    folder: "posts",           // folder in Cloudinary
+    folder: "posts",
     allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
+const upload = multer({ storage });
 
-// Multer upload middleware
-const cloudUpload = multer({ storage: cloudStorage });
-
-// =================== Routes ===================
-
-// Create new post with optional image and social links
-router.post("/", cloudUpload.single("image"), async (req, res) => {
+// Create post
+router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { title, content, category, instagram, facebook, youtube } = req.body;
-    const image = req.file ? req.file.path : null; // Cloudinary URL
+    if (!content) return res.status(400).json({ error: "Content is required" });
 
-    const newPost = new Post({
-      title,
-      content,
-      category,
-      image,
-      instagram,
-      facebook,
-      youtube,
-    });
+    const image = req.file ? req.file.path : null;
 
+    const newPost = new Post({ title, content, category, instagram, facebook, youtube, image });
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
   } catch (err) {
@@ -50,7 +40,7 @@ router.post("/", cloudUpload.single("image"), async (req, res) => {
   }
 });
 
-// Get all posts (optional filter by category)
+// Get all posts
 router.get("/", async (req, res) => {
   try {
     const { category } = req.query;
@@ -62,7 +52,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a single post by ID
+// Get post by ID
 router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -73,16 +63,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Update a post by ID with optional image and social links
-router.put("/:id", cloudUpload.single("image"), async (req, res) => {
+// Update post
+router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const updatedData = { ...req.body };
-    if (req.file) updatedData.image = req.file.path; // Cloudinary URL
+    if (req.file) updatedData.image = req.file.path;
 
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, {
-      new: true,
-    });
-
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, { new: true });
     if (!updatedPost) return res.status(404).json({ error: "Post not found" });
     res.json(updatedPost);
   } catch (err) {
@@ -90,7 +77,7 @@ router.put("/:id", cloudUpload.single("image"), async (req, res) => {
   }
 });
 
-// Delete a post by ID
+// Delete post
 router.delete("/:id", async (req, res) => {
   try {
     const deletedPost = await Post.findByIdAndDelete(req.params.id);

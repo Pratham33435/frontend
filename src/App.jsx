@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import Toogle from "./components/toggle";
 import PostList from "./components/Postlist";
 import PostPage from "./components/PostPage";
+import AdminPage from "./pages/Adminpage";
 
 
 function App() {
@@ -23,12 +24,16 @@ function App() {
       <Route path="/CreativeWritings" element={<CreativeWritings />} />
       <Route path="/Category" element={<Category />} />
       <Route path="/About" element={<About />} />
-      <Route path="/Contact" element={<Contact />} /><Route path="/poems" element={<PostList category="poem" />} />
+      <Route path="/Contact" element={<Contact />} />
+      <Route path="/poems" element={<PostList category="poems" />} />
 <Route path="/articles" element={<PostList category="articles" />} />
 <Route path="/stories" element={<PostList category="stories" />} />
 <Route path="/others" element={<PostList category="others" />} />
+ <Route path="/post/:id" element={<PostPage />} />
 
 <Route path="/post/:id" element={<PostPage />} />
+ <Route path="/admin" element={<AdminPage />} />
+
 
 
 

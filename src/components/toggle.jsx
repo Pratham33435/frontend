@@ -8,6 +8,8 @@ import { LuLayers } from "react-icons/lu";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { LuMail } from "react-icons/lu";
 
+import { FiLogIn } from "react-icons/fi";
+
 export default function Toggle() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -66,6 +68,8 @@ const toggleRef = useRef(null);
           <li><Link to="/Category" className="hover:text-yellow-400">Category</Link></li>
           <li><Link to="/About" className="hover:text-yellow-400">About</Link></li>
           <li><Link to="/Contact" className="hover:text-yellow-400">Contact</Link></li>
+         <li> <Link to="/admin" title="Admin Login"><FiLogIn size={24} /></Link>
+          </li> 
         </ul>
 
         {/* Mobile Toggle — hidden only on Home */}

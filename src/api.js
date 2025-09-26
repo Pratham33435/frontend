@@ -1,47 +1,50 @@
+const API_BASE = "https://creative-backend-0u37.onrender.com/api/posts";
 
-
-export const API_URL = "https://my-strapi-backend-5w3x.onrender.com";
-
-// Get posts by category
-export async function getPosts(category) {
-  let url = `${API_URL}/api/posts?populate=*`; // 👈 important
-  if (category) {
-    url += `&filters[category][$eq]=${category}`;
-  }
+// Fetch posts (optionally by category)
+export const getPosts = async (category) => {
+  let url = API_BASE;
+  if (category) url += `?category=${encodeURIComponent(category)}`;
   const res = await fetch(url);
-  const data = await res.json();
-  console.log(data)
-  return data.data;
-}
+  if (!res.ok) throw new Error("Failed to fetch posts");
+  return await res.json();
+};
 
-export async function getPostById(id) {
-  const res = await fetch(`${API_URL}/api/posts?populate=*`);
-  const data = await res.json();
-  return data.data.find((p) => p.id === parseInt(id));
-}
+// Fetch single post by ID
+export const getPostById = async (id) => {
+  const res = await fetch(`${API_BASE}/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch post");
+  return await res.json();
+};
 
+// Create new post (with image upload)
+export const createPost = async (postData) => {
+  const formData = new FormData();
+  formData.append("title", postData.title);
+  formData.append("content", postData.content);
+  formData.append("category", postData.category);
+  if (postData.instagram) formData.append("instagram", postData.instagram);
+  if (postData.facebook) formData.append("facebook", postData.facebook);
+  if (postData.youtube) formData.append("youtube", postData.youtube);
+  if (postData.imageFile) formData.append("image", postData.imageFile);
 
-// api.js
-export async function getPoems() {
-  const res = await fetch(`${API_URL}/api/poems`);
-  return (await res.json()).data;
-}
+  const res = await fetch(API_BASE, {
+    method: "POST",
+    body: formData,
+  });
 
-export async function getArticles() {
-  const res = await fetch(`${API_URL}/api/articles`);
-  return (await res.json()).data;
-}
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to create post");
+  }
+  return await res.json();
+};
 
-export async function getStories() {
-  const res = await fetch(`${API_URL}/api/stories`);
-  return (await res.json()).data;
-}
-
-export async function getOthers() {
-  const res = await fetch(`${API_URL}/api/others`);
-  return (await res.json()).data;
-}
-export function getImageUrl(image) {
-  if (!image || !image.url) return null;
-  return image.url.startsWith("http") ? image.url : `${API_URL}${image.url}`;
-}
+// Delete a post by ID
+export const deletePost = async (id) => {
+  const res = await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to delete post");
+  }
+  return await res.json();
+};

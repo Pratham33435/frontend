@@ -16,7 +16,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Contact Us</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,6 +55,11 @@ export default function Contact() {
           </button>
         </form>
       </div>
+      <footer>
+        <div className="">
+          Want to add more content? Just drop me an email and I'll share the details!
+        </div>
+      </footer>
     </div>
   );
 }
