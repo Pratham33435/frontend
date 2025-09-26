@@ -17,12 +17,7 @@ export default function About() {
           "Here, you can read and write freely—sharing your experiences, your poems, your stories, your articles, and your reflections. Think of it as your own digital newspaper, where your creativity takes center stage.",
         ],
       },
-      {
-        title: "Multilingual & Inclusive",
-        paragraphs: [
-          "We proudly support content in Nepali, Hindi, English, and many other languages. Because expression knows no borders—and neither should your words.",
-        ],
-      },
+      
       {
         title: "Free Speech, Not Cheap Speech",
         paragraphs: [
