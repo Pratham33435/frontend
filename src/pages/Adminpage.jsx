@@ -4,7 +4,7 @@ export default function AdminPage() {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
-  const [posts, setPosts] = useState([]); // ✅ initialize as empty array
+  const [posts, setPosts] = useState([]);
   const [post, setPost] = useState({
     title: "",
     category: "",
@@ -16,29 +16,45 @@ export default function AdminPage() {
 
   const editorRef = useRef(null);
 
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Fetch posts from backend
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch(
+        "https://creative-backend-0u37.onrender.com/api/posts",
+        { method: "GET", headers: { "Cache-Control": "no-cache" } }
+      );
+      const data = await res.json();
+      if (Array.isArray(data)) setPosts(data);
+      else setPosts([]); // safeguard
+    } catch (err) {
+      console.error("Failed to fetch posts", err);
+    }
+  };
+
+  // Fetch posts on component mount
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // Fetch posts after login
   useEffect(() => {
     if (isLoggedIn) fetchPosts();
   }, [isLoggedIn]);
 
-  const fetchPosts = async () => {
-    try {
-      const res = await fetch(
-        "https://creative-backend-0u37.onrender.com/api/posts"
-      );
-      const data = await res.json();
-      setPosts(Array.isArray(data) ? data : []); // ✅ ensure posts is always an array
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-      setPosts([]); // fallback if fetch fails
-    }
-  };
+  // Optional: auto-refresh every 60s
+  useEffect(() => {
+    const interval = setInterval(fetchPosts, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
+  // Admin login
   const handleLogin = () => {
     const adminPassword = "Localtales";
     if (password === adminPassword) setIsLoggedIn(true);
@@ -51,7 +67,7 @@ export default function AdminPage() {
 
   const getContent = () => {
     if (!editorRef.current) return "";
-    return editorRef.current.innerHTML;
+    return editorRef.current.innerHTML.trim();
   };
 
   const handleSubmit = async (e) => {
@@ -68,10 +84,7 @@ export default function AdminPage() {
 
       const res = await fetch(
         "https://creative-backend-0u37.onrender.com/api/posts",
-        {
-          method: "POST",
-          body: formData,
-        }
+        { method: "POST", body: formData }
       );
 
       if (res.ok) {
@@ -88,7 +101,7 @@ export default function AdminPage() {
         fetchPosts();
       } else {
         const data = await res.json();
-        alert("Error: " + (data.error || "Unknown error"));
+        alert("Error: " + data.error);
       }
     } catch (err) {
       alert("Server error: " + err.message);
@@ -100,16 +113,14 @@ export default function AdminPage() {
     try {
       const res = await fetch(
         `https://creative-backend-0u37.onrender.com/api/posts/${id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
       if (res.ok) {
         alert("Post deleted!");
         setPosts(posts.filter((p) => p._id !== id));
       } else {
         const data = await res.json();
-        alert("Error: " + (data.error || "Unknown error"));
+        alert("Error: " + data.error);
       }
     } catch (err) {
       alert("Server error: " + err.message);

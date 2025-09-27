@@ -13,7 +13,7 @@ const AnimatedIcons = () => {
         {/* Creative Writing */}
         <div className="flex flex-col items-center w-20 text-center">
           
-          <span className="mb-6 text-black text-xs leading-tight opacity-0 animate-text delay-0">
+          <span className="mb-2 text-black text-xs leading-tight">
             Creative<br />Writing
           </span>
          
@@ -27,7 +27,7 @@ const AnimatedIcons = () => {
 
         {/* Category */}
         <div className="flex flex-col items-center w-20 text-center">
-          <span className="mb-9 text-black text-xs opacity-0 animate-text delay-1">
+          <span className="mb-5 text-black text-xs">
             Category
           </span>
           <Link to={"/Category"}>
@@ -39,7 +39,7 @@ const AnimatedIcons = () => {
 
         {/* About Us */}
         <div className="flex flex-col items-center w-20 text-center">
-          <span className="mb-9 text-black text-xs opacity-0 animate-text delay-2">
+          <span className="mb-5 text-black text-xs">
             About Us
           </span>
 
@@ -52,7 +52,7 @@ const AnimatedIcons = () => {
 
         {/* Contact */}
         <div className="flex flex-col items-center w-20 text-center">
-          <span className="mb-9 text-black text-xs opacity-0 animate-text delay-3">
+          <span className="mb-5 text-black text-xs">
             Contact
           </span>
           <Link to={"/Contact"}>
